@@ -1,8 +1,10 @@
 
 // JS Table of Contents:
-// Firebase Initialization
-// 1-Click listener
-// 1-write chat into the database
+// Initialize Firebase
+// Program Reset
+// Event listener for clicking
+// A chat logging function storing inputs to database, and clearing after 10 chats
+
 // 2-control chat window opening and closing
     // chatbox has a form with submit
 // 3-delete the most distant chat of 10. This stores 10 chats form each player
@@ -39,19 +41,41 @@ firebase.initializeApp(config);
 
 let database = firebase.database();
 
+// Program Reset
+
+function resetingGame() {
+  database.ref('chat/').set({
+    chatEmpty: '',
+  });
+};
+
+resetingGame();
+
+// Event listener for clicking
 document.addEventListener('click', function(e) {
   e.preventDefault();
   let grabClass = '';
   let grabId = '';
   grabClass = e.target.className;
   grabId = e.target.id;
-  if(grabId === 'chat_send_button') {
+  if(grabId === 'chat_button') {
+    console.log('blah!');
     chatLogger();
   };
 });
 
+// A chat logging function storing inputs to database, and clearing after 10 chats
 function chatLogger() {
+  let chat = document.forms['chat_box']['chat_input'];
   database.ref('chat/' + chatNumber).set({
-    chatNumber: document.getElementsByName('chat_input').text,
+    chatNumber: chat.value,
   });
+  chatNumber += 1;
+  console.log(chatNumber);
+  if(chatNumber > 5) {
+    console.log('5!');
+    chatNumber = 0;
+  };
 };
+
+// Chat is posted to HTML
