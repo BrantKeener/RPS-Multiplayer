@@ -72,8 +72,8 @@ function chatLogger() {
   });
   chatNumber += 1;
   console.log(chatNumber);
-  if(chatNumber > 5) {
-    console.log('5!');
+  if(chatNumber > 10) {
+    console.log('10!');
     chatNumber = 0;
   };
 };
