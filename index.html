@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>RPS Multiplayer</title>
+    <link rel="stylesheet" type="text/css" href="assets/style.css">
+    <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+</head>
+<body>
+    <div id="main_container">
+        <header>
+            <h1 id=RPS_title>
+                Rock, Paper, Scissors!
+            </h1>
+        </header>
+        <details>
+            <summary>
+                Instructions
+            </summary>
+            <ol>
+                <ul>Do This</ul>
+                <ul>And This</ul>
+                <ul>Also This</ul>
+                <ul>What About This</ul>
+                <ul>Finally This</ul>
+            </ol>
+        </details>
+        <section id="player_area">
+            <figure>
+                <img src="assets/images/fist_picture_resized.jpg" alt="player_1">
+            </figure>
+        </section>
+        <p>Vs!</p>
+        <section id="opponent_area">
+            <figure>
+                <img src="assets/images/fist_picture_resized.jpg" alt="player_2">
+            </figure>
+        </section>
+        <section id="high_score_area">
+            <header>
+                <h2>
+                    High Score
+                </h2>
+            </header>
+            <table>
+                <tr>
+                    <th>User-Id</th>
+                    <th>Score</th>
+                </tr>
+                <tr id="high_score_1">
+                    <td>U1</td>
+                    <td>300</td>
+                </tr>
+                <tr id="high_score_2">
+                    <td>U2</td>
+                    <td>200</td>
+                </tr>
+                <tr id="high_score_3">
+                    <td>U3</td>
+                    <td>100</td>
+                </tr>
+            </table>
+        </section>
+        <section id="current_score_area">
+            <header>
+                <h2>
+                    Current Score
+                </h2>
+            </header>
+            <p>Round:</p>
+            <p>Wins:</p>
+            <p>Losses:</p>
+            <p>Ties:</p>
+        </section>
+        <section id="chat_area">
+            <section id="chat_log">
+
+            </section>
+            <form>
+                <label for="chat_input" class="chat_input">Enter Chat Here</label><br>
+                <input name="chat_input" class="chat_input">
+                <input type="submit" name="chat_input" id="chat_send_button">
+            </form>
+        </section>
+    </div>
+</body>
+</html>
+
+<script type='text/javascript' src='assets/javascript/jquery-3.3.1.min.js'></script>
+<script type='text/javascript' src='assets/javascript/javascript.js'></script>
