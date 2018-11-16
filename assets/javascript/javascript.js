@@ -3,6 +3,7 @@
 // Initialize Firebase
 // Program Reset
 // Event listener for clicking
+// Form validation
 // A chat logging function storing inputs to database, and clearing after 10 chats
 
 // 2-control chat window opening and closing
@@ -25,7 +26,7 @@
 // Animated fanfare upon winning
 
 let chatNumber = 0;
-
+let userName = '';
 
 
 // Initialize Firebase
@@ -52,30 +53,48 @@ function resetingGame() {
 resetingGame();
 
 // Event listener for clicking
-document.addEventListener('click', function(e) {
+$(document).click(function(e) {
   e.preventDefault();
   let grabClass = '';
   let grabId = '';
   grabClass = e.target.className;
   grabId = e.target.id;
   if(grabId === 'chat_button') {
-    console.log('blah!');
-    chatLogger();
+    formValidation();
   };
 });
+
+// Validate the input before logging to chat
+function formValidation() {
+  let chatCheck = document.forms['chat_box']['chat_input'].value;
+  console.log(chatCheck);
+  if(chatCheck === '') {
+    console.log('You must type something');
+  } else {
+    chatLogger();
+  };
+};
 
 // A chat logging function storing inputs to database, and clearing after 10 chats
 function chatLogger() {
   let chat = document.forms['chat_box']['chat_input'];
-  database.ref('chat/' + chatNumber).set({
-    chatNumber: chat.value,
+  database.ref('chat/').push({
+    UserName: userName,
+    chat: chat.value,
+    time: firebase.database.ServerValue.TIMESTAMP,
   });
   chatNumber += 1;
   console.log(chatNumber);
-  if(chatNumber > 10) {
+  if(chatNumber > 9) {
     console.log('10!');
-    chatNumber = 0;
+    chatNumber = 8;
   };
+  chat.value = '';
 };
 
-// Chat is posted to HTML
+// Chat posted to chat log
+database.ref('chat/').on('child_added', function(snapshot) {
+  let storedValue = snapshot.val();
+  let nextChat = storedValue.UserName + ': ' + storedValue.chat;
+  console.log(nextChat);
+});
