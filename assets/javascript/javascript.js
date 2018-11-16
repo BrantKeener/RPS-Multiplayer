@@ -26,7 +26,7 @@
 // Animated fanfare upon winning
 
 let chatNumber = 0;
-let userName = '';
+let userName = 'test';
 
 
 // Initialize Firebase
@@ -45,9 +45,8 @@ let database = firebase.database();
 // Program Reset
 
 function resetingGame() {
-  database.ref('chat/').set({
-    chatEmpty: '',
-  });
+  database.ref('chat/').remove();
+  chatNumber = 0;
 };
 
 resetingGame();
@@ -67,7 +66,6 @@ $(document).click(function(e) {
 // Validate the input before logging to chat
 function formValidation() {
   let chatCheck = document.forms['chat_box']['chat_input'].value;
-  console.log(chatCheck);
   if(chatCheck === '') {
     console.log('You must type something');
   } else {
@@ -84,17 +82,17 @@ function chatLogger() {
     time: firebase.database.ServerValue.TIMESTAMP,
   });
   chatNumber += 1;
-  console.log(chatNumber);
-  if(chatNumber > 9) {
-    console.log('10!');
-    chatNumber = 8;
-  };
   chat.value = '';
 };
 
-// Chat posted to chat log
+// Messages posted to chat log
 database.ref('chat/').on('child_added', function(snapshot) {
-  let storedValue = snapshot.val();
-  let nextChat = storedValue.UserName + ': ' + storedValue.chat;
-  console.log(nextChat);
+  let lastAdded = snapshot.val();
+  let chatPara = $('<p>').text(`${lastAdded.userName} : ${lastAdded.chat}`);
+  $('#chat_log').append(chatPara);
+  if(chatNumber > 5) {
+    chatLogClear();
+  };
 });
+
+// Delete oldest message after 5
