@@ -5,6 +5,7 @@
 // Event listener for clicking
 // Form validation
 // A chat logging function storing inputs to database, and clearing after 10 chats
+// Login modal open and close
 
 // 2-control chat window opening and closing
     // chatbox has a form with submit
@@ -49,8 +50,6 @@ function resetingGame() {
   chatNumber = 0;
 };
 
-resetingGame();
-
 // Event listener for clicking
 $(document).click(function(e) {
   e.preventDefault();
@@ -59,18 +58,34 @@ $(document).click(function(e) {
   grabClass = e.target.className;
   grabId = e.target.id;
   if(grabId === 'chat_button') {
-    formValidation();
+    chatFormValidation();
   };
+  if(grabId === 'user_button') {
+    loginFormValidation();
+  }
 });
 
 // Validate the input before logging to chat
-function formValidation() {
+function chatFormValidation() {
   let chatCheck = document.forms['chat_box']['chat_input'].value;
   if(chatCheck === '') {
     console.log('You must type something');
   } else {
     chatLogger();
   };
+};
+
+// Validate login information before writing to variable
+
+function loginFormValidation() {
+  let loginCheck = document.forms['username']['user_input'].value;
+  if(loginCheck === '') {
+    console.log('Please enter a valid username');
+  } else {
+    userName = loginCheck;
+    loginModalClose();
+    console.log(userName);
+  }
 };
 
 // A chat logging function storing inputs to database, and clearing after 10 chats
@@ -87,8 +102,9 @@ function chatLogger() {
 
 // Messages posted to chat log
 database.ref('chat/').on('child_added', function(snapshot) {
+  console.log(userName);
   let lastAdded = snapshot.val();
-  let chatPara = $('<p>').text(`${lastAdded.userName} : ${lastAdded.chat}`);
+  let chatPara = $('<p>').text(`${lastAdded.UserName} : ${lastAdded.chat}`);
   $('#chat_log').append(chatPara);
   if(chatNumber > 5) {
     chatLogClear();
@@ -96,3 +112,19 @@ database.ref('chat/').on('child_added', function(snapshot) {
 });
 
 // Delete oldest message after 5
+
+
+// Login modal
+function loginModalDisplay() {
+  $('#login_modal').css('visibility', 'visible');
+};
+
+function loginModalClose() {
+  $('#login_modal').css('visibility', 'hidden');
+};
+
+
+
+
+resetingGame();
+loginModalDisplay();
