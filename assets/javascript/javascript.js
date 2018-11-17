@@ -84,7 +84,6 @@ function loginFormValidation() {
   } else {
     userName = loginCheck;
     loginModalClose();
-    console.log(userName);
   }
 };
 
