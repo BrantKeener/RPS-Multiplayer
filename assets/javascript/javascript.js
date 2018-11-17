@@ -28,6 +28,7 @@
 
 let chatNumber = 0;
 let userName = 'test';
+let playerNumber = '';
 
 
 // Initialize Firebase
@@ -59,6 +60,7 @@ $(document).click(function(e) {
   grabId = e.target.id;
   if(grabId === 'chat_button') {
     chatFormValidation();
+    console.log(playerNumber);
   };
   if(grabId === 'user_button') {
     loginFormValidation();
@@ -83,6 +85,7 @@ function loginFormValidation() {
     console.log('Please enter a valid username');
   } else {
     userName = loginCheck;
+    playerNumberAssign();
     loginModalClose();
   }
 };
@@ -91,7 +94,7 @@ function loginFormValidation() {
 function chatLogger() {
   let chat = document.forms['chat_box']['chat_input'];
   database.ref('chat/').push({
-    UserName: userName,
+    username: userName,
     chat: chat.value,
     time: firebase.database.ServerValue.TIMESTAMP,
   });
@@ -103,15 +106,12 @@ function chatLogger() {
 database.ref('chat/').on('child_added', function(snapshot) {
   console.log(userName);
   let lastAdded = snapshot.val();
-  let chatPara = $('<p>').text(`${lastAdded.UserName} : ${lastAdded.chat}`);
+  let chatPara = $('<p>').text(`${lastAdded.username} : ${lastAdded.chat}`);
   $('#chat_log').append(chatPara);
   if(chatNumber > 5) {
     chatLogClear();
   };
 });
-
-// Delete oldest message after 5
-
 
 // Login modal
 function loginModalDisplay() {
@@ -122,7 +122,20 @@ function loginModalClose() {
   $('#login_modal').css('visibility', 'hidden');
 };
 
-
+// Player number assign
+function playerNumberAssign() {
+  database.ref('player/').once('value').then(function(snapshot) {
+    if(snapshot.hasChild('playernumber') === false) {
+      playerNumber = 1;
+      database.ref('player/').push({
+        playernumber: 1,
+      });
+    } else {
+      playerNumber = 2;
+      };
+  });
+  console.log(playerNumber);
+};
 
 
 resetingGame();
