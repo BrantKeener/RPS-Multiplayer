@@ -30,5 +30,5 @@
 }
 
 #player_choice_area img {
-    scroll-snap-align: start;
+    scroll-snap-align: center;
 }

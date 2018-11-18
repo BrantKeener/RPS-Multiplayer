@@ -5,7 +5,10 @@
 // Event listener for clicking
 // Form validation
 // A chat logging function storing inputs to database, and clearing after 10 chats
+// Posts chats to html
 // Login modal open and close
+// Player number assign
+// RPS choices are stored in a closure client side!!!Not yet working!
 
 // Some way to clear the playernumber
 // 2-control chat window opening and closing
@@ -13,9 +16,8 @@
 // 3-delete the most distant chat of 10. This stores 10 chats form each player
 // 4-decrease line opacity as the chat log gets farther back
 // 5-Each player has their 'character' displayed on the left
-// 6-The left display will have the choices
 // 7-The right display will obfuscate the other player's choices
-// 8-Choices are stored in a closure client side
+
 // 9-Signal is sent form both sides when choices are made
 // 10-When both sides send the 'chosen' signal, each closure is released, and they are evaluated
 // 11-Winner is determined
@@ -49,6 +51,9 @@ let database = firebase.database();
 
 function resetingGame() {
   database.ref('chat/').remove();
+  database.ref().set({
+    choicemade: false,
+  });
   chatNumber = 0;
 };
 
@@ -66,7 +71,16 @@ $(document).click(function(e) {
     case 'user_button':
       loginFormValidation()
       break;
-  };
+    case 'rock':
+      RPSChoice('rock');
+      break;
+    case 'paper':
+      RPSChoice('paper');
+      break;
+    case 'scissor':
+      RPSChoice('scissor');
+      break;
+    };
 });
 
 // Validate the input before logging to chat
@@ -106,7 +120,6 @@ function chatLogger() {
 
 // Messages posted to chat log
 database.ref('chat/').on('child_added', function(snapshot) {
-  console.log(userName);
   let lastAdded = snapshot.val();
   let chatPara = $('<p>').text(`${lastAdded.username} : ${lastAdded.chat}`);
   $('#chat_log').append(chatPara);
@@ -124,10 +137,9 @@ function loginModalClose() {
   $('#login_modal').css('visibility', 'hidden');
 };
 
-// Player number assign !!!This is not ready. Keep working with this. Both players are assigned Number one
+// Player number assign
 function playerNumberAssign() {
   database.ref('player/').once('value').then(function(snapshot) {
-    console.log(snapshot.hasChild('playernumber'))
     if(snapshot.hasChild('playernumber') === false) {
       playerNumber = 1;
       database.ref('player/').set({
@@ -139,9 +151,36 @@ function playerNumberAssign() {
   });
 };
 
-// RPS choice
+// RPS choice !!! This is not working. Maybe closure isn't the right choice.
 function RPSChoice(choice) {
-  console.log(choice);
+  console.log('choice made');
+  let playerChoice = choice;
+  choiceMadeChecker();
+  function sendChoiceDB(choice) {
+    console.log(choice);
+  };
+  sendChoiceDB(playerChoice);
 };
+
+// Send a signal to the DB that a player has chosen
+function choiceMadeChecker() {
+  database.ref().once('value').then(function(snapshot) {
+  console.log(snapshot.val().choicemade);
+  if(snapshot.val().choicemade == false) {
+    choiceMadeTrueifier();
+  } else {
+    console.log(RPSChoice());
+  };
+  });
+};
+
+// Makes the choicemade key in the database true
+function choiceMadeTrueifier() {
+  console.log('choice not yet made!');
+  database.ref().set({
+    choicemade: true,
+  });
+};
+
 resetingGame();
 loginModalDisplay();
