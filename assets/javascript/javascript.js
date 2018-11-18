@@ -31,7 +31,6 @@
 
 let chatNumber = 0;
 let userName = '';
-let opponentName = '';
 let playerNumber = false;
 let playerChoice = '';
 
@@ -50,7 +49,6 @@ firebase.initializeApp(config);
 let database = firebase.database();
 
 // Program Reset
-
 function resetingGame() {
   database.ref().update({
     choicemade: false,
@@ -107,7 +105,6 @@ function chatFormValidation() {
 };
 
 // Validate login information before writing to variable
-
 function loginFormValidation() {
   let loginCheck = document.forms['username']['user_input'].value;
   if(loginCheck === '') {
@@ -116,8 +113,21 @@ function loginFormValidation() {
     userName = loginCheck;
     playerNumberAssign();
     loginModalClose();
+    userNamePost();
   }
 };
+
+// Posts username within player area
+function userNamePost() {
+  $('#username_chosen_status').text(userName);
+};
+
+// Posts opponents name within opponent area
+database.ref('RPSMP/player/').on('child_added', function(snapshot) {
+  if(snapshot.val() !== userName) {
+    $('#opponent_username_chosen_status').text(snapshot.val());
+  };
+});
 
 // A chat logging function storing inputs to database, and clearing after 10 chats
 function chatLogger() {
@@ -193,6 +203,9 @@ function choiceMadeTrueifier() {
 };
 
 // Update the DOM to indicate that either you have chosen, or your opponent has
+
+
+
 
 resetingGame();
 loginModalDisplay();

@@ -23,19 +23,8 @@
                 Rock, Paper, Scissors!
             </h1>
         </header>
-        <details>
-            <summary>
-                Instructions
-            </summary>
-            <ol>
-                <ul>Do This</ul>
-                <ul>And This</ul>
-                <ul>Also This</ul>
-                <ul>What About This</ul>
-                <ul>Finally This</ul>
-            </ol>
-        </details>
         <section id="player_area">
+            <h2 id="username_chosen_status">No User Logged In</h2>
             <!-- <button id='choice_back' type="button">back</button> -->
             <figure id="player_choice_area">
                 <img src="assets/images/fist_picture_resized.jpg" alt="base">
@@ -47,8 +36,12 @@
         </section>
         <p>Vs!</p>
         <section id="opponent_area">
+            <h2 id="opponent_username_chosen_status">No User Logged In</h2>
             <figure>
-                <img src="assets/images/fist_picture_resized.jpg" alt="player_2">
+                <img src="assets/images/fist_picture_resized.jpg" alt="player_2"
+                    data-rock="assets/images/rock.jpg" 
+                    data-paper="assets/images/paper.jpg" 
+                    data-scissor="assets/images/scissor.jpg">
             </figure>
         </section>
         <section id="high_score_area">
