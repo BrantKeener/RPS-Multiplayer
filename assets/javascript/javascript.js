@@ -17,6 +17,7 @@
 // 4-decrease line opacity as the chat log gets farther back
 // 5-Each player has their 'character' displayed on the left
 // 7-The right display will obfuscate the other player's choices
+// Gamer lobby
 
 // 9-Signal is sent form both sides when choices are made
 // 10-When both sides send the 'chosen' signal, each closure is released, and they are evaluated
@@ -31,6 +32,7 @@
 
 let chatNumber = 0;
 let userName = '';
+let opponentName = '';
 let playerNumber = false;
 let playerChoice = '';
 
@@ -77,19 +79,16 @@ $(document).click(function(e) {
       $('#player_choice_area').css('overflow', 'hidden');
       playerChoice = 'rock';
       choiceMadeChecker();
-      console.log(playerChoice);
       break;
     case 'paper':
       $('#player_choice_area').css('overflow', 'hidden');
       playerChoice = 'paper';
       choiceMadeChecker();
-      console.log(playerChoice);
       break;
     case 'scissor':
       $('#player_choice_area').css('overflow', 'hidden');
       playerChoice = 'scissor';
       choiceMadeChecker();
-      console.log(playerChoice);
       break;
     };
 });
@@ -126,12 +125,12 @@ function userNamePost() {
 database.ref('RPSMP/player/').on('child_added', function(snapshot) {
   if(snapshot.val() !== userName) {
     $('#opponent_username_chosen_status').text(snapshot.val());
+    opponentName = snapshot.val();
   };
 });
 
 // A chat logging function storing inputs to database, and clearing after 10 chats
 function chatLogger() {
-  console.log(userName);
   let chat = document.forms['chat_box']['chat_input'];
   database.ref('RPSMP/chat/').push({
     username: userName,
@@ -181,15 +180,14 @@ function playerNumberAssign() {
 // Send a signal to the DB that a player has chosen
 function choiceMadeChecker() {
   database.ref().once('value').then(function(snapshot) {
-    console.log(snapshot.val().choicemade);
     if(snapshot.val().choicemade == false) {
       choiceMadeTrueifier();
       database.ref('RPSMP/chosen/').update({
-        firstchoice: `${userName} has chosen`,
+        firstchoiceplayer: `${userName}`,
       });
     } else {
       database.ref('RPSMP/chosen/').update({
-        secondchoice: `${userName} has chosen`,
+        secondchoiceplayer: `${userName}`,
       });
     };
   });
@@ -203,7 +201,31 @@ function choiceMadeTrueifier() {
 };
 
 // Update the DOM to indicate that either you have chosen, or your opponent has
+database.ref('RPSMP/chosen').on('child_added', function() {
+  database.ref('RPSMP/chosen/firstchoiceplayer').once('value', function(snapshot) {
+    console.log(opponentName);
+    if(snapshot.val() === `${userName}`) {
+      $('#username_chosen_status').text("You've chosen!")
+    } else if(snapshot.val() ===`${opponentName}`){
+      $('#opponent_username_chosen_status').text(`${opponentName} has chosen!`);
+    };
+  });
+  database.ref('RPSMP/chosen/secondchoiceplayer').once('value', function(snapshot) {
+    if(snapshot.val() === `${userName}`) {
+      $('#username_chosen_status').text("You've chosen!");
+    } else if(snapshot.val() === `${opponentName}`) {
+      $('#opponent_username_chosen_status').text(`${opponentName} has chosen!`);
+    };
+  });
+});
 
+
+// This will handle the situation when both players have chosen. It sends the data to the DB so that both parties now have access
+database.ref('RPSMP/chosen/').on('child_added', function(snapshot) {
+  if(snapshot.key === 'secondchoice') {
+    console.log('both choices made');
+  }
+});
 
 
 
