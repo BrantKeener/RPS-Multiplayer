@@ -30,8 +30,10 @@
 // Animated fanfare upon winning
 
 let chatNumber = 0;
-let userName = 'test';
+let userName = '';
+let opponentName = '';
 let playerNumber = false;
+let playerChoice = '';
 
 
 // Initialize Firebase
@@ -50,10 +52,12 @@ let database = firebase.database();
 // Program Reset
 
 function resetingGame() {
-  database.ref('chat/').remove();
-  database.ref().set({
+  database.ref().update({
     choicemade: false,
   });
+  database.ref('RPSMP').child('chosen/').remove();
+  database.ref('RPSMP').child('player/').remove();
+  database.ref('RPSMP').child('chat/').remove();
   chatNumber = 0;
 };
 
@@ -72,13 +76,22 @@ $(document).click(function(e) {
       loginFormValidation()
       break;
     case 'rock':
-      RPSChoice('rock');
+      $('#player_choice_area').css('overflow', 'hidden');
+      playerChoice = 'rock';
+      choiceMadeChecker();
+      console.log(playerChoice);
       break;
     case 'paper':
-      RPSChoice('paper');
+      $('#player_choice_area').css('overflow', 'hidden');
+      playerChoice = 'paper';
+      choiceMadeChecker();
+      console.log(playerChoice);
       break;
     case 'scissor':
-      RPSChoice('scissor');
+      $('#player_choice_area').css('overflow', 'hidden');
+      playerChoice = 'scissor';
+      choiceMadeChecker();
+      console.log(playerChoice);
       break;
     };
 });
@@ -108,8 +121,9 @@ function loginFormValidation() {
 
 // A chat logging function storing inputs to database, and clearing after 10 chats
 function chatLogger() {
+  console.log(userName);
   let chat = document.forms['chat_box']['chat_input'];
-  database.ref('chat/').push({
+  database.ref('RPSMP/chat/').push({
     username: userName,
     chat: chat.value,
     time: firebase.database.ServerValue.TIMESTAMP,
@@ -119,7 +133,7 @@ function chatLogger() {
 };
 
 // Messages posted to chat log
-database.ref('chat/').on('child_added', function(snapshot) {
+database.ref('RPSMP/chat/').on('child_added', function(snapshot) {
   let lastAdded = snapshot.val();
   let chatPara = $('<p>').text(`${lastAdded.username} : ${lastAdded.chat}`);
   $('#chat_log').append(chatPara);
@@ -139,48 +153,46 @@ function loginModalClose() {
 
 // Player number assign
 function playerNumberAssign() {
-  database.ref('player/').once('value').then(function(snapshot) {
-    if(snapshot.hasChild('playernumber') === false) {
+  database.ref('RPSMP/player/').once('value').then(function(snapshot) {
+    if(snapshot.hasChild('playernumber1') === false) {
       playerNumber = 1;
-      database.ref('player/').set({
-        playernumber: 1,
+      database.ref('RPSMP/player/').update({
+        playernumber1: userName,
       });
     } else {
       playerNumber = 2;
-      };
+      database.ref('RPSMP/player/').update({
+        playernumber2: userName,
+      });
+    };
   });
-};
-
-// RPS choice !!! This is not working. Maybe closure isn't the right choice.
-function RPSChoice(choice) {
-  console.log('choice made');
-  let playerChoice = choice;
-  choiceMadeChecker();
-  function sendChoiceDB(choice) {
-    console.log(choice);
-  };
-  sendChoiceDB(playerChoice);
 };
 
 // Send a signal to the DB that a player has chosen
 function choiceMadeChecker() {
   database.ref().once('value').then(function(snapshot) {
-  console.log(snapshot.val().choicemade);
-  if(snapshot.val().choicemade == false) {
-    choiceMadeTrueifier();
-  } else {
-    console.log(RPSChoice());
-  };
+    console.log(snapshot.val().choicemade);
+    if(snapshot.val().choicemade == false) {
+      choiceMadeTrueifier();
+      database.ref('RPSMP/chosen/').update({
+        firstchoice: `${userName} has chosen`,
+      });
+    } else {
+      database.ref('RPSMP/chosen/').update({
+        secondchoice: `${userName} has chosen`,
+      });
+    };
   });
 };
 
 // Makes the choicemade key in the database true
 function choiceMadeTrueifier() {
-  console.log('choice not yet made!');
-  database.ref().set({
+  database.ref().update({
     choicemade: true,
   });
 };
+
+// Update the DOM to indicate that either you have chosen, or your opponent has
 
 resetingGame();
 loginModalDisplay();
