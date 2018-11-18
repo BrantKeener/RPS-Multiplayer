@@ -10,6 +10,7 @@
 
 #username {
     display: flex;
+    flex-direction: column;
     background: rgba(149,32,208,0.9);
     position: absolute;
     top: 20%;
@@ -18,4 +19,16 @@
     width: 50%;
     justify-content: center;
     align-items: center;
+}
+
+#player_choice_area {
+    width: 250px;
+    height: 250px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scroll-snap-type: y mandatory;
+}
+
+#player_choice_area img {
+    scroll-snap-align: start;
 }

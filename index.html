@@ -11,8 +11,8 @@
 <body>
     <div id="main_container">
         <section id='login_modal'>
-            <h1>Enter a Username</h1>
             <form id="username">
+                <h1>Enter a Username</h1>
                 <label for="username_input" class="user_input">Username</label><br>
                 <input name="user_input" class="user_input">
                 <input type="submit" name="user_button" id="user_button">
@@ -36,8 +36,11 @@
             </ol>
         </details>
         <section id="player_area">
-            <figure>
-                <img src="assets/images/fist_picture_resized.jpg" alt="player_1">
+            <figure id="player_choice_area">
+                <img src="assets/images/fist_picture_resized.jpg" alt="base">
+                <img id="rock" src="assets/images/rock.jpg" alt="rock">
+                <img id="paper" src="assets/images/paper.jpg" alt="paper">
+                <img id="scissor" src="assets/images/scissor.jpg" alt="scissor">
             </figure>
         </section>
         <p>Vs!</p>

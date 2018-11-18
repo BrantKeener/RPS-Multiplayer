@@ -7,11 +7,12 @@
 // A chat logging function storing inputs to database, and clearing after 10 chats
 // Login modal open and close
 
+// Some way to clear the playernumber
 // 2-control chat window opening and closing
     // chatbox has a form with submit
 // 3-delete the most distant chat of 10. This stores 10 chats form each player
 // 4-decrease line opacity as the chat log gets farther back
-// 5-Each player has their 'character displayed on the left
+// 5-Each player has their 'character' displayed on the left
 // 6-The left display will have the choices
 // 7-The right display will obfuscate the other player's choices
 // 8-Choices are stored in a closure client side
@@ -28,7 +29,7 @@
 
 let chatNumber = 0;
 let userName = 'test';
-let playerNumber = '';
+let playerNumber = false;
 
 
 // Initialize Firebase
@@ -58,13 +59,14 @@ $(document).click(function(e) {
   let grabId = '';
   grabClass = e.target.className;
   grabId = e.target.id;
-  if(grabId === 'chat_button') {
-    chatFormValidation();
-    console.log(playerNumber);
+  switch(grabId) {
+    case 'chat_button':
+      chatFormValidation();
+      break;
+    case 'user_button':
+      loginFormValidation()
+      break;
   };
-  if(grabId === 'user_button') {
-    loginFormValidation();
-  }
 });
 
 // Validate the input before logging to chat
@@ -122,21 +124,24 @@ function loginModalClose() {
   $('#login_modal').css('visibility', 'hidden');
 };
 
-// Player number assign
+// Player number assign !!!This is not ready. Keep working with this. Both players are assigned Number one
 function playerNumberAssign() {
   database.ref('player/').once('value').then(function(snapshot) {
+    console.log(snapshot.hasChild('playernumber'))
     if(snapshot.hasChild('playernumber') === false) {
       playerNumber = 1;
-      database.ref('player/').push({
+      database.ref('player/').set({
         playernumber: 1,
       });
     } else {
       playerNumber = 2;
       };
   });
-  console.log(playerNumber);
 };
 
-
+// RPS choice
+function RPSChoice(choice) {
+  console.log(choice);
+};
 resetingGame();
 loginModalDisplay();
