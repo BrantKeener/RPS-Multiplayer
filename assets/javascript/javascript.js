@@ -10,6 +10,7 @@
 // Player number assign
 // RPS choices are stored in a closure client side!!!Not yet working!
 
+// display other player's choice at the end
 // Some way to clear the playernumber
 // 2-control chat window opening and closing
     // chatbox has a form with submit
