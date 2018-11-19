@@ -42,6 +42,7 @@ let winCount = 0;
 let tieCount = 0;
 let lossCount = 0;
 let roundCount = 1;
+let loginOk = true;
 
 
 // Initialize Firebase
@@ -57,15 +58,40 @@ firebase.initializeApp(config);
 
 let database = firebase.database();
 
-// Program Reset
+// Newgame Reset
+function newGameReset() {
+  database.ref().update({
+    choicemade: false,
+  })
+  database.ref('RPSMP').child('chosen/').remove();
+  database.ref('RPSMP').child('chat/').remove();
+  database.ref('RPSMP').child('player/').remove();
+  chatNumber = 0;
+  userName = '';
+  opponentName = '';
+  playerNumber = false;
+  playerChoice = '';
+  playerChoiceDB = '';
+  opponentChoiceDB = '';
+  winCount = 0;
+  tieCount = 0;
+  lossCount = 0;
+  roundCount = 1;
+};
+
+// Midgame Reset
 function midGameReset() {
   database.ref().update({
     choicemade: false,
   });
   database.ref('RPSMP').child('chosen/').remove();
-  database.ref('RPSMP').child('player/').remove();
-  database.ref('RPSMP').child('chat/').remove();
-  chatNumber = 0;
+  playerChoice = '';
+  playerChoiceDB = '';
+  opponentChoiceDB = '';
+  $('#username_chosen_status').text(userName);
+  $('#opponent_username_chosen_status').text(opponentName);
+  $('#player_choice_area').css('overflow-y', 'scroll');
+  $('#player_choice_area').scrollTop(0);
 };
 
 // Event listener for clicking
@@ -118,9 +144,7 @@ function loginFormValidation() {
   } else {
     userName = loginCheck;
     playerNumberAssign();
-    loginModalClose();
-    userNamePost();
-  }
+  };
 };
 
 // Posts username within player area
@@ -172,14 +196,20 @@ function playerNumberAssign() {
   database.ref('RPSMP/player/').once('value').then(function(snapshot) {
     if(snapshot.hasChild('playernumber1') === false) {
       playerNumber = 1;
+      loginModalClose();
+      userNamePost();
       database.ref('RPSMP/player/').update({
         playernumber1: userName,
       });
-    } else {
+    } else if(snapshot.hasChild('playernumber2') === false) {
       playerNumber = 2;
+      loginModalClose();
+      userNamePost();
       database.ref('RPSMP/player/').update({
         playernumber2: userName,
       });
+    } else {
+      alert('There are too many players in this session');
     };
   });
 };
@@ -309,22 +339,24 @@ function tieAdder() {
 function winDisplay() {
   $('#wins').text(`Wins: ${winCount}`);
   $('#round').text(`Round: ${roundCount}`);
+  setTimeout(midGameReset, 1000);
 };
 
 function lossDisplay() {
   $('#losses').text(`Losses: ${lossCount}`);
   $('#round').text(`Round: ${roundCount}`);
+  setTimeout(midGameReset, 1000);
 };
 
 function tieDisplay() {
   $('#ties').text(`Ties: ${tieCount}`);
   $('#round').text(`Round: ${roundCount}`);
+  setTimeout(midGameReset, 1000);
 };
 
 
-
+newGameReset();
 winDisplay();
 tieDisplay();
 lossDisplay();
-midGameReset();
 loginModalDisplay();
