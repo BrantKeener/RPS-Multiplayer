@@ -10,25 +10,13 @@
 // Player number assign
 // RPS choices are stored in a closure client side!!!Not yet working!
 
-// display other player's choice at the end
-// Some way to clear the playernumber
+
+
 // 2-control chat window opening and closing
     // chatbox has a form with submit
 // 3-delete the most distant chat of 10. This stores 10 chats form each player
 // 4-decrease line opacity as the chat log gets farther back
-// 5-Each player has their 'character' displayed on the left
 // 7-The right display will obfuscate the other player's choices
-// Gamer lobby
-// Two players cannot have the same name
-
-// 9-Signal is sent form both sides when choices are made
-// 10-When both sides send the 'chosen' signal, each closure is released, and they are evaluated
-// 11-Winner is determined
-// 12-Win/loss is updated on both sides
-// 13-Reset so that a new round can be played
-// 14-Login that allows players to input their name
-// 15-Name is used for chat, and displayed above corresponding character on both sides
-// 16-Logout that disconnects session, and displays winner
 // 17-Winner is displayed after 10 rounds
 // Animated fanfare upon winning
 
@@ -43,7 +31,7 @@ let winCount = 0;
 let tieCount = 0;
 let lossCount = 0;
 let roundCount = 1;
-let loginOk = true;
+let loginplayer2 = false;
 let loginAlerts = {
   noname: 'Please enter a username to login',
   duplicate: 'That username is already in use. Try a different username',
@@ -165,10 +153,16 @@ function userNamePost() {
 
 // Posts opponents name within opponent area
 database.ref('RPSMP/player/').on('child_added', function(snapshot) {
-  if(snapshot.val() !== userName) {
-    $('#opponent_username_chosen_status').text(snapshot.val());
-    opponentName = snapshot.val();
-  };
+  database.ref('RPSMP/player/').once('value', function(snapshot) {
+    console.log(snapshot.val().playernumber1);
+    if(snapshot.val().playernumber1 !== userName) {
+      $('#opponent_username_chosen_status').text(snapshot.val().playernumber1);
+      opponentName = snapshot.val().playernumber1;
+    } else if(snapshot.val().playernumber2 !== userName) {
+      $('#opponent_username_chosen_status').text(snapshot.val().playernumber2);
+      opponentName = snapshot.val().playernumber2;
+    };
+  });
 });
 
 // A chat logging function storing inputs to database, and clearing after 10 chats
@@ -230,8 +224,19 @@ database.ref('RPSMP/player/').on('child_added', function(snapshot) {
     $('#player1').text(snapshot.val());
     $('#player1').removeClass();
   } else {
-    $('#player2').text(snapshot.val());
-    $('#player2').removeClass();
+    database.ref('RPSMP/player/').once('value', function(snapshot) {
+      $('#player2').text(snapshot.val().playernumber2);
+      $('#player2').removeClass();
+    });
+    database.ref('RPSMP/player/').update({
+      loginplayer2: true,
+    });
+  };
+  database.ref('RPSMP/player/').once('value', function(snapshot) {
+    loginPlayer2 = snapshot.val().loginplayer2;
+  });
+  if(loginPlayer2 === true) {
+    loginModalClose();
   };
 });
 
