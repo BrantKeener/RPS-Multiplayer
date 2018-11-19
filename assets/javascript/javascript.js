@@ -35,6 +35,8 @@ let userName = '';
 let opponentName = '';
 let playerNumber = false;
 let playerChoice = '';
+let playerChoiceDB = '';
+let opponentChoiceDB = '';
 
 
 // Initialize Firebase
@@ -203,7 +205,6 @@ function choiceMadeTrueifier() {
 // Update the DOM to indicate that either you have chosen, or your opponent has
 database.ref('RPSMP/chosen').on('child_added', function() {
   database.ref('RPSMP/chosen/firstchoiceplayer').once('value', function(snapshot) {
-    console.log(opponentName);
     if(snapshot.val() === `${userName}`) {
       $('#username_chosen_status').text("You've chosen!")
     } else if(snapshot.val() ===`${opponentName}`){
@@ -219,15 +220,66 @@ database.ref('RPSMP/chosen').on('child_added', function() {
   });
 });
 
-
 // This will handle the situation when both players have chosen. It sends the data to the DB so that both parties now have access
 database.ref('RPSMP/chosen/').on('child_added', function(snapshot) {
-  if(snapshot.key === 'secondchoice') {
-    console.log('both choices made');
+  if(snapshot.key === 'secondchoiceplayer') {
+    database.ref('RPSMP/chosen/').update({
+      [userName]: playerChoice, 
+    });
+  };
+  database.ref(`RPSMP/chosen/${userName}`).once('value', function(snapshot) {
+    playerChoiceDB = snapshot.val();
+  });
+  database.ref(`RPSMP/chosen/${opponentName}`).once('value', function(snapshot) {
+    opponentChoiceDB = snapshot.val();
+  });
+  if(playerChoiceDB !== null && opponentChoiceDB !== null) {
+    choiceCompare();
   }
 });
 
-
+// Here we will compare both player's choices, and evaluate the outcome
+function choiceCompare() {
+  if(playerChoiceDB === 'rock') {
+    switch (opponentChoiceDB) {
+      case 'rock':
+      console.log('tie!');
+      break;
+      case 'paper':
+      console.log('loss!');
+      break;
+      case 'scissor':
+      console.log('win!');
+      break;
+    };
+  };
+  if(playerChoiceDB === 'paper') {
+    switch (opponentChoiceDB) {
+      case 'rock':
+      console.log('win!');
+      break;
+      case 'paper':
+      console.log('tie!');
+      break;
+      case 'scissor':
+      console.log('loss!');
+      break;
+    };
+  };
+  if(playerChoiceDB === 'scissor') {
+    switch (opponentChoiceDB) {
+      case 'rock':
+      console.log('loss!');
+      break;
+      case 'paper':
+      console.log('win!');
+      break;
+      case 'scissor':
+      console.log('tie!');
+      break;
+    };
+  };
+};
 
 resetingGame();
 loginModalDisplay();
