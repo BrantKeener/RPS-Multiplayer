@@ -44,7 +44,10 @@ let tieCount = 0;
 let lossCount = 0;
 let roundCount = 1;
 let loginOk = true;
-
+let loginAlerts = {
+  noname: 'Please enter a username to login',
+  duplicate: 'That username is already in use. Try a different username',
+}
 
 // Initialize Firebase
 var config = {
@@ -139,12 +142,19 @@ function chatFormValidation() {
 
 // Validate login information before writing to variable
 function loginFormValidation() {
-  let loginCheck = document.forms['username']['user_input'].value;
+  let loginCheck = document.forms['user_form']['user_input'].value;
+  let loginAlert = $('#no_or_duplicate_login_alert');
   if(loginCheck === '') {
-    console.log('Please enter a valid username');
+    loginAlert.text(loginAlerts.noname);
+    loginAlert.css('visibility', 'visible');
+  } else if(loginCheck === `${opponentName}`) {
+    loginAlert.text(loginAlerts.duplicate);
+    loginAlert.css('visibility', 'visible');
   } else {
     userName = loginCheck;
     playerNumberAssign();
+    $('#user_form').remove();
+    loginAlert.remove();
   };
 };
 
@@ -183,7 +193,7 @@ database.ref('RPSMP/chat/').on('child_added', function(snapshot) {
   };
 });
 
-// Login modal
+// Login modal open and close
 function loginModalDisplay() {
   $('#login_modal').css('visibility', 'visible');
 };
@@ -197,14 +207,12 @@ function playerNumberAssign() {
   database.ref('RPSMP/player/').once('value').then(function(snapshot) {
     if(snapshot.hasChild('playernumber1') === false) {
       playerNumber = 1;
-      loginModalClose();
       userNamePost();
       database.ref('RPSMP/player/').update({
         playernumber1: userName,
       });
     } else if(snapshot.hasChild('playernumber2') === false) {
       playerNumber = 2;
-      loginModalClose();
       userNamePost();
       database.ref('RPSMP/player/').update({
         playernumber2: userName,
@@ -214,6 +222,20 @@ function playerNumberAssign() {
     };
   });
 };
+
+// Logged players identifier
+database.ref('RPSMP/player/').on('child_added', function(snapshot) {
+  let playerWaiting = 'Waiting for Player to Join'
+  if((playerNumber === 1 && $('#player1').text() === playerWaiting) || playerNumber === false) {
+    $('#player1').text(snapshot.val());
+    $('#player1').removeClass();
+  } else {
+    $('#player2').text(snapshot.val());
+    $('#player2').removeClass();
+  };
+});
+
+
 
 // Send a signal to the DB that a player has chosen
 function choiceMadeChecker() {

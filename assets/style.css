@@ -32,3 +32,34 @@
 #player_choice_area img {
     scroll-snap-align: center;
 }
+
+#logged_players {
+    background: white;
+    border-collapse: collapse;
+    height: 35%;
+    width: 50%;
+}
+
+table, th, td {
+    border: .1rem solid black;
+}
+
+#no_or_duplicate_login_alert {
+    visibility: hidden;
+}
+
+.waiting {
+    animation-duration: 2s;
+    animation-name: infadeout;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+@keyframes infadeout {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}

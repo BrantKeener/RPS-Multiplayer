@@ -11,19 +11,27 @@
 <body>
     <div id="main_container">
         <section id='login_modal'>
-            <form id="username">
-                <h1>Enter a Username</h1>
-                <label for="username_input" class="user_input">Username</label><br>
-                <input name="user_input" class="user_input">
-                <input type="submit" name="user_button" id="user_button">
-            </form>
-        </section>
-        <section id="game_lobby_modal">
-            <table>
-                <tr>
-                    Player 1:
-                </tr>
-            </table>
+            <section id="username">
+                <form id="user_form">
+                    <h1>Enter a Username</h1>
+                    <label for="username_input" class="user_input">Username</label><br>
+                    <input name="user_input" class="user_input">
+                    <input type="submit" name="user_button" id="user_button">
+                </form>
+                <p id="no_or_duplicate_login_alert">Please enter a username</p>
+                <table id="logged_players">
+                    <h2>Players Currently Logged In</h2>
+                    <tr>
+                        <th>Username</th>
+                    </tr>
+                    <tr>
+                        <td class="waiting" id="player1">Waiting for Player to Join</td>
+                    </tr>
+                    <tr>
+                        <td class="waiting" id="player2">Waiting for Player to Join</td>
+                    </tr>
+                </table>
+            </section>
         </section>
         <header>
             <h1 id=RPS_title>
