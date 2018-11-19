@@ -18,6 +18,7 @@
 // 5-Each player has their 'character' displayed on the left
 // 7-The right display will obfuscate the other player's choices
 // Gamer lobby
+// Two players cannot have the same name
 
 // 9-Signal is sent form both sides when choices are made
 // 10-When both sides send the 'chosen' signal, each closure is released, and they are evaluated
@@ -37,6 +38,10 @@ let playerNumber = false;
 let playerChoice = '';
 let playerChoiceDB = '';
 let opponentChoiceDB = '';
+let winCount = 0;
+let tieCount = 0;
+let lossCount = 0;
+let roundCount = 1;
 
 
 // Initialize Firebase
@@ -53,7 +58,7 @@ firebase.initializeApp(config);
 let database = firebase.database();
 
 // Program Reset
-function resetingGame() {
+function midGameReset() {
   database.ref().update({
     choicemade: false,
   });
@@ -243,43 +248,83 @@ function choiceCompare() {
   if(playerChoiceDB === 'rock') {
     switch (opponentChoiceDB) {
       case 'rock':
-      console.log('tie!');
+      tieAdder();
       break;
       case 'paper':
-      console.log('loss!');
+      lossAdder();
       break;
       case 'scissor':
-      console.log('win!');
+      winAdder();
       break;
     };
   };
   if(playerChoiceDB === 'paper') {
     switch (opponentChoiceDB) {
       case 'rock':
-      console.log('win!');
+      winAdder();
       break;
       case 'paper':
-      console.log('tie!');
+      tieAdder();
       break;
       case 'scissor':
-      console.log('loss!');
+      lossAdder();
       break;
     };
   };
   if(playerChoiceDB === 'scissor') {
     switch (opponentChoiceDB) {
       case 'rock':
-      console.log('loss!');
+      lossAdder();
       break;
       case 'paper':
-      console.log('win!');
+      winAdder();
       break;
       case 'scissor':
-      console.log('tie!');
+      tieAdder();
       break;
     };
   };
 };
 
-resetingGame();
+// Three functions to handle win, loss, and tie
+function winAdder() {
+  ++winCount;
+  ++roundCount;
+  winDisplay();
+};
+
+function lossAdder() {
+  ++lossCount;
+  ++roundCount;
+  lossDisplay();
+};
+
+function tieAdder() {
+  ++tieCount;
+  ++roundCount;
+  tieDisplay();
+};
+
+// Update the win/loss/tie displays
+function winDisplay() {
+  $('#wins').text(`Wins: ${winCount}`);
+  $('#round').text(`Round: ${roundCount}`);
+};
+
+function lossDisplay() {
+  $('#losses').text(`Losses: ${lossCount}`);
+  $('#round').text(`Round: ${roundCount}`);
+};
+
+function tieDisplay() {
+  $('#ties').text(`Ties: ${tieCount}`);
+  $('#round').text(`Round: ${roundCount}`);
+};
+
+
+
+winDisplay();
+tieDisplay();
+lossDisplay();
+midGameReset();
 loginModalDisplay();
