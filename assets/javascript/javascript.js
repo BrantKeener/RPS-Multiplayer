@@ -13,19 +13,6 @@
 // When the client's connection state changes...
 
 
-// connectedRef.on("value", function(snap) {
-
-//   // If they are connected..
-//   if (snap.val()) {
-
-//     // Add user to the connections list.
-//     var con = connectionsRef.push(true);
-
-//     // Remove user from the connection list when they disconnect.
-//     con.onDisconnect().remove();
-//   }
-// });
-
 
 
 
@@ -67,7 +54,28 @@ var config = {
 };
 firebase.initializeApp(config);
 
+// Firebase variables
 let database = firebase.database();
+let connectedRef = database.ref('.info/connected');
+let connectionsRef = database.ref('RPSMP/connections');
+
+connectedRef.on("value", function(snapshot) {
+  if (snapshot.val()) {
+    let userCon = connectionsRef.push(true);
+    userCon.onDisconnect().remove();
+  };
+});
+
+// Change login modal based on number of players
+connectionsRef.on('value', function(snapshot) {
+  let necessaryPlayers = 2 - snapshot.numChildren();
+  let enough = $('#online_counterhead').data('enough');
+  if(necessaryPlayers <= 0) {
+    $('#online_counterhead').text(enough);
+    newGameReset();
+    setTimeout(loginLoad, 1500);
+  };
+});
 
 // Newgame Reset
 function newGameReset() {
@@ -104,6 +112,14 @@ function midGameReset() {
   $('#player_choice_area').css('overflow-y', 'scroll');
   $('#player_choice_area').scrollTop(0);
   $('#opponent_image').attr('src', 'assets/images/RPS.jpg');
+};
+
+// Allow players to login
+function loginLoad() {
+  let login = $('#online_counterhead').data('login');
+  $('#online_counterhead').text(login);
+  $('#user_form').css('visibility', 'visible');
+  $('#logged_players').css('visibility', 'visible');
 };
 
 // Event listener for clicking
@@ -214,6 +230,7 @@ function loginModalDisplay() {
 
 function loginModalClose() {
   $('#login_modal').css('visibility', 'hidden');
+  $('#logged_players').css('visibility', 'hidden');
 };
 
 // Player number assign
@@ -239,20 +256,23 @@ function playerNumberAssign() {
 
 // Logged players identifier
 database.ref('RPSMP/player/').on('child_added', function(snapshot) {
-  let playerWaiting = 'Waiting for Player to Join'
+  let playerWaiting = 'Player not Ready';
+  let playerBase = database.ref('RPSMP/player/');
   if((playerNumber === 1 && $('#player1').text() === playerWaiting) || playerNumber === false) {
-    $('#player1').text(snapshot.val());
-    $('#player1').removeClass();
+    playerBase.once('value', function(snapshot) {
+      $('#player1').text(snapshot.val().playernumber1);
+      $('#player1').removeClass();
+    });
   } else {
-    database.ref('RPSMP/player/').once('value', function(snapshot) {
+    playerBase.once('value', function(snapshot) {
       $('#player2').text(snapshot.val().playernumber2);
       $('#player2').removeClass();
     });
-    database.ref('RPSMP/player/').update({
+    playerBase.update({
       loginplayer2: true,
     });
   };
-  database.ref('RPSMP/player/').once('value', function(snapshot) {
+  playerBase.once('value', function(snapshot) {
     loginPlayer2 = snapshot.val().loginplayer2;
   });
   if(loginPlayer2 === true) {
@@ -417,22 +437,36 @@ function winDisplay() {
   $('#wins').text(`Wins: ${winCount}`);
   $('#round').text(`Round: ${roundCount}`);
   setTimeout(midGameReset, 1000);
+  howManyRounds();
 };
 
 function lossDisplay() {
   $('#losses').text(`Losses: ${lossCount}`);
   $('#round').text(`Round: ${roundCount}`);
   setTimeout(midGameReset, 1000);
+  howManyRounds();
 };
 
 function tieDisplay() {
   $('#ties').text(`Ties: ${tieCount}`);
   $('#round').text(`Round: ${roundCount}`);
   setTimeout(midGameReset, 1000);
+  howManyRounds();
 };
 
+// 10 round completion 
+function howManyRounds() {
+  if(roundCount === 3) {
+    gameComplete();
+  };
+};
 
-newGameReset();
+function gameComplete() {
+  let gc = $('#online_counterhead').data('game_complete');
+  $('#online_counterhead').text(gc);
+  $('#login_modal').css('visibility', 'visible');
+};
+
 winDisplay();
 tieDisplay();
 lossDisplay();

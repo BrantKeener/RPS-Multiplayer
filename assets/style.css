@@ -8,6 +8,10 @@
     background: rgba(0,0,0,0.5);
 }
 
+#user_form, #logged_players {
+    visibility: hidden;
+}
+
 #username {
     display: flex;
     flex-direction: column;

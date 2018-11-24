@@ -20,15 +20,19 @@
                 </form>
                 <p id="no_or_duplicate_login_alert">Please enter a username</p>
                 <table id="logged_players">
-                    <h2>Players Currently Logged In</h2>
+                    <h2 id="online_counterhead" 
+                    data-need="1 more player needed" 
+                    data-enough="Enough players have joined"
+                    data-login="You may now login"
+                    data-game_complete="Game Complete!">1 more player needed</h2>
                     <tr>
                         <th>Username</th>
                     </tr>
                     <tr>
-                        <td class="waiting" id="player1">Waiting for Player to Join</td>
+                        <td class="waiting" id="player1">Player not Ready</td>
                     </tr>
                     <tr>
-                        <td class="waiting" id="player2">Waiting for Player to Join</td>
+                        <td class="waiting" id="player2">Player not Ready</td>
                     </tr>
                 </table>
             </section>
