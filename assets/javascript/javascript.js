@@ -9,6 +9,24 @@
 // Login modal open and close
 // Player number assign
 // RPS choices are stored in a closure client side!!!Not yet working!
+// Monitor how many players are in a session, and use this information to decide how to clear stored players.
+// When the client's connection state changes...
+
+
+// connectedRef.on("value", function(snap) {
+
+//   // If they are connected..
+//   if (snap.val()) {
+
+//     // Add user to the connections list.
+//     var con = connectionsRef.push(true);
+
+//     // Remove user from the connection list when they disconnect.
+//     con.onDisconnect().remove();
+//   }
+// });
+
+
 
 
 
@@ -19,6 +37,7 @@
 // 7-The right display will obfuscate the other player's choices
 // 17-Winner is displayed after 10 rounds
 // Animated fanfare upon winning
+// Ready button for round complete
 
 let chatNumber = 0;
 let userName = '';
@@ -54,7 +73,7 @@ let database = firebase.database();
 function newGameReset() {
   database.ref().update({
     choicemade: false,
-  })
+  });
   database.ref('RPSMP').child('chosen/').remove();
   database.ref('RPSMP').child('chat/').remove();
   database.ref('RPSMP').child('player/').remove();
@@ -84,6 +103,7 @@ function midGameReset() {
   $('#opponent_username_chosen_status').text(opponentName);
   $('#player_choice_area').css('overflow-y', 'scroll');
   $('#player_choice_area').scrollTop(0);
+  $('#opponent_image').attr('src', 'assets/images/RPS.jpg');
 };
 
 // Event listener for clicking
@@ -307,12 +327,15 @@ function choiceCompare() {
     switch (opponentChoiceDB) {
       case 'rock':
       tieAdder();
+      opponentChoiceDisplay('rock');
       break;
       case 'paper':
       lossAdder();
+      opponentChoiceDisplay('paper');
       break;
       case 'scissor':
       winAdder();
+      opponentChoiceDisplay('scissor');
       break;
     };
   };
@@ -320,12 +343,15 @@ function choiceCompare() {
     switch (opponentChoiceDB) {
       case 'rock':
       winAdder();
+      opponentChoiceDisplay('rock');
       break;
       case 'paper':
       tieAdder();
+      opponentChoiceDisplay('paper');
       break;
       case 'scissor':
       lossAdder();
+      opponentChoiceDisplay('scissor');
       break;
     };
   };
@@ -333,12 +359,15 @@ function choiceCompare() {
     switch (opponentChoiceDB) {
       case 'rock':
       lossAdder();
+      opponentChoiceDisplay('rock');
       break;
       case 'paper':
       winAdder();
+      opponentChoiceDisplay('paper');
       break;
       case 'scissor':
       tieAdder();
+      opponentChoiceDisplay('scissor');
       break;
     };
   };
@@ -361,6 +390,26 @@ function tieAdder() {
   ++tieCount;
   ++roundCount;
   tieDisplay();
+};
+
+// Change opponent's avatar based on their choice
+
+function opponentChoiceDisplay(opponentchoice) {
+  let oppimage = $('#opponent_image');
+  let rock = oppimage.data('rock');
+  let paper = oppimage.data('paper');
+  let scissor = oppimage.data('scissor');
+  switch(opponentchoice) {
+    case 'rock':
+    oppimage.attr('src', rock);
+    break;
+    case 'paper':
+    oppimage.attr('src', paper);
+    break;
+    case 'scissor':
+    oppimage.attr('src', scissor);
+    break;
+  };
 };
 
 // Update the win/loss/tie displays
