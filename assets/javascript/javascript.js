@@ -42,6 +42,7 @@ let loginAlerts = {
   noname: 'Please enter a username to login',
   duplicate: 'That username is already in use. Try a different username',
 }
+let roundsPerGame = 3;
 
 // Initialize Firebase
 var config = {
@@ -151,6 +152,10 @@ $(document).click(function(e) {
       playerChoice = 'scissor';
       choiceMadeChecker();
       break;
+    case 'post_win_reset':
+      midGameReset();
+      loginModalClose();
+      roundCount = 1;
     };
 });
 
@@ -436,35 +441,58 @@ function opponentChoiceDisplay(opponentchoice) {
 function winDisplay() {
   $('#wins').text(`Wins: ${winCount}`);
   $('#round').text(`Round: ${roundCount}`);
-  setTimeout(midGameReset, 1000);
+  if(roundCount < roundsPerGame) {
+    setTimeout(midGameReset, 1000);
+  };
   howManyRounds();
 };
 
 function lossDisplay() {
   $('#losses').text(`Losses: ${lossCount}`);
   $('#round').text(`Round: ${roundCount}`);
-  setTimeout(midGameReset, 1000);
+  if(roundCount < roundsPerGame) {
+    setTimeout(midGameReset, 1000);
+  };
   howManyRounds();
 };
 
 function tieDisplay() {
   $('#ties').text(`Ties: ${tieCount}`);
   $('#round').text(`Round: ${roundCount}`);
-  setTimeout(midGameReset, 1000);
+  if(roundCount < roundsPerGame) {
+    setTimeout(midGameReset, 1000);
+  };
   howManyRounds();
 };
 
 // 10 round completion 
 function howManyRounds() {
-  if(roundCount === 3) {
+  if(roundCount === roundsPerGame) {
     gameComplete();
   };
 };
 
+// Game completion modal
 function gameComplete() {
   let gc = $('#online_counterhead').data('game_complete');
   $('#online_counterhead').text(gc);
   $('#login_modal').css('visibility', 'visible');
+  setTimeout(winnderDeclared, 1000);
+};
+
+function winnderDeclared() {
+  if(winCount > lossCount && tieCount !== roundCount) {
+    $('#online_counterhead').text(`You have won!`);
+    $('#username').append('<button id="post_win_reset">Play Again</button>');
+  };
+  if(lossCount > winCount && tieCount !== roundCount) {
+    $('#online_counterhead').text(`${opponentName} has won!`);
+    $('#username').append('<button id="post_win_reset">Play Again</button>');
+  };
+  if(winCount === lossCount || tieCount === roundCount) {
+    $('#online_counterhead').text('It is a tie. You two are evenly matched.')
+    $('#username').append('<button id="post_win_reset">Play Again</button>');
+  };
 };
 
 winDisplay();
