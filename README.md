@@ -18,3 +18,7 @@ If you have an quesitons about this project, or see a bug, reach out to me at: b
 
 ## Contributors/Maintainers
 Contributed to, and maintained by Brant Keener
+
+## Attributions
+Music: Outrun with the Dead Artist: Vincenzo Salvia
+Cheering sounds, Sad trombone, and whine are all provided by [Sound Bible](http://http://soundbible.com/)
