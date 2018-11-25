@@ -293,7 +293,7 @@ table, th, td {
         flex-wrap: wrap;
         justify-items: center;
     }
-    #gamer_area {
+    #game_area {
         display: flex;
         flex-wrap: wrap;
         justify-items: center;
@@ -329,5 +329,11 @@ table, th, td {
     }
     #win_loss_tie {
         width: 75%;
+    }
+    #main_container {
+        padding: 1%;
+    }
+    #game_area {
+        display: block;
     }
 }
