@@ -16,7 +16,6 @@ body {
     font-family: virus_01;
 }
 
-
 #main_container {
     background-image: url('images/vw_background_2.jpg');
     height: 100%;
@@ -46,7 +45,7 @@ body {
 
 #RPS_title::before {
     left: 5px;
-    text-shadow: -1px 0 rgba(204, 102, 188, 1);;
+    text-shadow: -1px 0 rgba(204, 102, 188, 1);
     animation: glitch-anim-1 2s infinite linear alternate-reverse;
 }
 
@@ -228,6 +227,11 @@ table, th, td {
 
 #high_score_area{
     padding: 10%;
+}
+
+#user_button, #chat_button, #post_win_reset {
+    background: rgba(204, 102, 188, 1);;
+    color: blueviolet;
 }
 
 @media screen and (max-width: 1150px) {
