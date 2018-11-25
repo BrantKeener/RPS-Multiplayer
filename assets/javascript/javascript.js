@@ -1,30 +1,34 @@
 
 // JS Table of Contents:
 // Initialize Firebase
-// Program Reset
+// Firebase variables
+// Change login modal based on number of players
+// Newgame Reset
+// Midgame Reset
+// Allow players to login
 // Event listener for clicking
-// Form validation
+// Validate the input before logging to chat
+// Validate login information before writing to variable
+// Posts username within player area
+// Posts opponents name within opponent area
 // A chat logging function storing inputs to database, and clearing after 10 chats
-// Posts chats to html
+// Messages posted to chat log
 // Login modal open and close
 // Player number assign
-// RPS choices are stored in a closure client side!!!Not yet working!
-// Monitor how many players are in a session, and use this information to decide how to clear stored players.
-// When the client's connection state changes...
-
-
-
-
-
-
-// 2-control chat window opening and closing
-    // chatbox has a form with submit
-// 3-delete the most distant chat of 10. This stores 10 chats form each player
-// 4-decrease line opacity as the chat log gets farther back
-// 7-The right display will obfuscate the other player's choices
-// 17-Winner is displayed after 10 rounds
-// Animated fanfare upon winning
-// Ready button for round complete
+// Logged players identifier
+// Send a signal to the DB that a player has chosen
+// Makes the choicemade key in the database true
+// Update the DOM to indicate that either you have chosen, or your opponent has
+// This will handle the situation when both players have chosen. It sends the data to the DB so that both parties now have access
+// Here we will compare both player's choices, and evaluate the outcome
+// Three functions to handle win, loss, and tie
+// Change opponent's avatar based on their choice
+// Update the win/loss/tie displays
+// Close the wtl picture
+// 10 round completion 
+// Game completion modal
+// Check new scores against high score
+// Display high scores
 
 let chatNumber = 0;
 let userName = '';
@@ -164,7 +168,7 @@ $(document).click(function(e) {
 function chatFormValidation() {
   let chatCheck = document.forms['chat_box']['chat_input'].value;
   if(chatCheck === '') {
-    console.log('You must type something');
+    alert('You must type something');
   } else {
     chatLogger();
   };
@@ -543,7 +547,6 @@ function highScoreCheck() {
     let topScore = snapshot.val().hscore1.score1;
     let secondScore = snapshot.val().hscore2.score2;
     let thirdScore = snapshot.val().hscore3.score3;
-    console.log(topScore);
     if(winCount > topScore) {
       database.ref('RPSMP/highScores/').update({
         hscore1: {userid1: userName, score1: winCount},
@@ -561,13 +564,6 @@ function highScoreCheck() {
     };
     highScoreDisplay();
   });
-  
-
-  // database.ref('RPSMP/highScores/').update({
-  //   hscore1: {userid1: 'default1', score1: 5},
-  //   hscore2: {userid2: 'default2', score2: 4},
-  //   hscore3: {userid3: 'default3', score3: 3}, 
-  // });
 };
 
 // Display high scores
