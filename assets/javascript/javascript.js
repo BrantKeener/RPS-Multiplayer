@@ -42,7 +42,7 @@ let loginAlerts = {
   noname: 'Please enter a username to login',
   duplicate: 'That username is already in use. Try a different username',
 }
-let roundsPerGame = 3;
+let roundsPerGame = 5;
 
 // Initialize Firebase
 var config = {
@@ -65,6 +65,7 @@ connectedRef.on("value", function(snapshot) {
     let userCon = connectionsRef.push(true);
     userCon.onDisconnect().remove();
   };
+  $('#username').css('visibility', 'visible');
 });
 
 // Change login modal based on number of players
@@ -236,6 +237,7 @@ function loginModalDisplay() {
 function loginModalClose() {
   $('#login_modal').css('visibility', 'hidden');
   $('#logged_players').css('visibility', 'hidden');
+  $('#username').css('visibility', 'hidden');
 };
 
 // Player number assign
@@ -439,30 +441,64 @@ function opponentChoiceDisplay(opponentchoice) {
 
 // Update the win/loss/tie displays
 function winDisplay() {
+  let winPic = $('#win_loss_tie').data('win');
+  console.log(winPic);
   $('#wins').text(`Wins: ${winCount}`);
   $('#round').text(`Round: ${roundCount}`);
   if(roundCount < roundsPerGame) {
     setTimeout(midGameReset, 1000);
   };
+  if(winCount > 0) {
+  loginModalDisplay();
+  $('#win_loss_tie').attr('src', winPic)
+  $('#round_picture').css('visibility', 'visible');
+  $('#username').css('visibility', 'hidden');
+  };
+  setTimeout(wtlDisplayClose, 2000);
   howManyRounds();
 };
 
 function lossDisplay() {
+  let lossPic = $('#win_loss_tie').data('loss');
+  console.log(lossPic);
   $('#losses').text(`Losses: ${lossCount}`);
   $('#round').text(`Round: ${roundCount}`);
   if(roundCount < roundsPerGame) {
     setTimeout(midGameReset, 1000);
   };
+  if(lossCount > 0) {
+  loginModalDisplay();
+  $('#win_loss_tie').attr('src', lossPic)
+  $('#round_picture').css('visibility', 'visible');
+  $('#username').css('visibility', 'hidden');
+  };
+  setTimeout(wtlDisplayClose, 2000);
   howManyRounds();
 };
 
 function tieDisplay() {
+  let tiePic = $('#win_loss_tie').data('tie');
   $('#ties').text(`Ties: ${tieCount}`);
   $('#round').text(`Round: ${roundCount}`);
   if(roundCount < roundsPerGame) {
     setTimeout(midGameReset, 1000);
   };
+  if(tieCount > 0) {
+  loginModalDisplay();
+  $('#win_loss_tie').attr('src', tiePic)
+  $('#round_picture').css('visibility', 'visible');
+  $('#username').css('visibility', 'hidden');
+  };
+  setTimeout(wtlDisplayClose, 2000);
   howManyRounds();
+};
+
+// Close the wtl picture
+function wtlDisplayClose() {
+  $('#round_picture').css('visibility', 'hidden');
+  if(roundCount > 1 && roundCount !== roundsPerGame) {
+    loginModalClose();
+  };
 };
 
 // 10 round completion 
@@ -476,20 +512,25 @@ function howManyRounds() {
 function gameComplete() {
   let gc = $('#online_counterhead').data('game_complete');
   $('#online_counterhead').text(gc);
-  $('#login_modal').css('visibility', 'visible');
-  setTimeout(winnderDeclared, 1000);
+  setTimeout(winnerDeclared, 1000);
 };
 
-function winnderDeclared() {
+function winnerDeclared() {
   if(winCount > lossCount && tieCount !== roundCount) {
+    $('#username').css('visibility', 'visible');
+    $('#login_modal').css('visibility', 'visible');
     $('#online_counterhead').text(`You have won!`);
     $('#username').append('<button id="post_win_reset">Play Again</button>');
   };
   if(lossCount > winCount && tieCount !== roundCount) {
+    $('#username').css('visibility', 'visible');
+    $('#login_modal').css('visibility', 'visible');
     $('#online_counterhead').text(`${opponentName} has won!`);
     $('#username').append('<button id="post_win_reset">Play Again</button>');
   };
   if(winCount === lossCount || tieCount === roundCount) {
+    $('#username').css('visibility', 'visible');
+    $('#login_modal').css('visibility', 'visible');
     $('#online_counterhead').text('It is a tie. You two are evenly matched.')
     $('#username').append('<button id="post_win_reset">Play Again</button>');
   };

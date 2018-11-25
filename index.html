@@ -7,10 +7,17 @@
     <title>RPS Multiplayer</title>
     <link rel="stylesheet" type="text/css" href="assets/style.css">
     <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 </head>
 <body>
     <div id="main_container">
-        <section id='login_modal'>
+        <section id="login_modal">
+            <section id="round_picture">
+                <img id="win_loss_tie" 
+                data-win="assets/images/thumbs_up.jpg" 
+                data-loss="assets/images/thumbs_down.jpg" 
+                data-tie="assets/images/tie.png" src="assets/images/thumbs_up.jpg" alt="wtl pic">
+            </section>
             <section id="username">
                 <form id="user_form">
                     <h1>Enter a Username</h1>
@@ -38,76 +45,82 @@
             </section>
         </section>
         <header>
-            <h1 id=RPS_title>
-                Rock, Paper, Scissors!
+            <h1 id=RPS_title data-text="ROCK, PAPER, SCISSORS">
+                ROCK, PAPER, SCISSORS
             </h1>
         </header>
-        <section id="player_area">
-            <h2 id="username_chosen_status">No User Logged In</h2>
-            <!-- <button id='choice_back' type="button">back</button> -->
-            <figure id="player_choice_area">
-                <img src="assets/images/RPS-player.jpg" alt="base">
-                <img id="rock" src="assets/images/rock.jpg" alt="rock">
-                <img id="paper" src="assets/images/paper.jpg" alt="paper">
-                <img id="scissor" src="assets/images/scissor.jpg" alt="scissor">
-            </figure>
-            <!-- <button id='choice_forward' type="button">forward</button> -->
-        </section>
-        <p>Vs!</p>
-        <section id="opponent_area">
-            <h2 id="opponent_username_chosen_status">No User Logged In</h2>
-            <figure>
-                <img id="opponent_image" src="assets/images/RPS.jpg" alt="player_2"
-                    data-rock="assets/images/rock.jpg" 
-                    data-paper="assets/images/paper.jpg" 
-                    data-scissor="assets/images/scissor.jpg">
-            </figure>
-        </section>
-        <section id="high_score_area">
-            <header>
-                <h2>
-                    High Score
-                </h2>
-            </header>
-            <table>
-                <tr>
-                    <th>User-Id</th>
-                    <th>Score</th>
-                </tr>
-                <tr id="high_score_1">
-                    <td>U1</td>
-                    <td>300</td>
-                </tr>
-                <tr id="high_score_2">
-                    <td>U2</td>
-                    <td>200</td>
-                </tr>
-                <tr id="high_score_3">
-                    <td>U3</td>
-                    <td>100</td>
-                </tr>
-            </table>
-        </section>
-        <section id="current_score_area">
-            <header>
-                <h2>
-                    Current Score
-                </h2>
-            </header>
-            <p id="round">Round:</p>
-            <p id="wins">Wins:</p>
-            <p id="losses">Losses:</p>
-            <p id="ties">Ties:</p>
-        </section>
-        <section id="chat_area">
-            <section id="chat_log">
-
+        <section id="game_area">
+            <section id="choice_row">
+                <section id="player_area">
+                    <h2 id="username_chosen_status">No User Logged In</h2>
+                    <!-- <button id='choice_back' type="button">back</button> -->
+                    <figure id="player_choice_area">
+                        <img src="assets/images/RPS-player.jpg" alt="base">
+                        <img id="rock" src="assets/images/rock.jpg" alt="rock">
+                        <img id="paper" src="assets/images/paper.jpg" alt="paper">
+                        <img id="scissor" src="assets/images/scissor.jpg" alt="scissor">
+                    </figure>
+                    <!-- <button id='choice_forward' type="button">forward</button> -->
+                </section>
+                <h2>VS!</h2>
+                <section id="opponent_area">
+                    <h2 id="opponent_username_chosen_status">No User Logged In</h2>
+                    <figure>
+                        <img id="opponent_image" src="assets/images/RPS.jpg" alt="player_2"
+                            data-rock="assets/images/rock.jpg" 
+                            data-paper="assets/images/paper.jpg" 
+                            data-scissor="assets/images/scissor.jpg">
+                    </figure>
+                </section>
             </section>
-            <form name="chat_box">
-                <label for="chat_input" class="chat_input">Enter Chat Here</label><br>
-                <input name="chat_input" class="chat_input">
-                <input type="submit" name="chat_button" id="chat_button">
-            </form>
+            <section id="score_chat_row">
+                <section id="high_score_area">
+                    <header>
+                        <h2>
+                            High Score
+                        </h2>
+                    </header>
+                    <table>
+                        <tr>
+                            <th>User-Id</th>
+                            <th>Score</th>
+                        </tr>
+                        <tr id="high_score_1">
+                            <td>U1</td>
+                            <td>300</td>
+                        </tr>
+                        <tr id="high_score_2">
+                            <td>U2</td>
+                            <td>200</td>
+                        </tr>
+                        <tr id="high_score_3">
+                            <td>U3</td>
+                            <td>100</td>
+                        </tr>
+                    </table>
+                </section>
+                <section id="current_score_area">
+                    <header>
+                        <h2>
+                            Current Score
+                        </h2>
+                    </header>
+                    <p id="round">Round:</p>
+                    <p id="wins">Wins:</p>
+                    <p id="losses">Losses:</p>
+                    <p id="ties">Ties:</p>
+                </section>
+                <section id="chat_area">
+                    <section id="chat_log">
+
+                    </section>
+                    <form id="chat_box" name="chat_box">
+                        <label for="chat_input" class="chat_input">Comms up</label><br>
+                        <input name="chat_input" class="chat_input">
+                        <input type="submit" name="chat_button" id="chat_button">
+                    </form>
+                </section>
+            </section>
         </section>
     </div>
 </body>
