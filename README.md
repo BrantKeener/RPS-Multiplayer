@@ -21,4 +21,4 @@ Contributed to, and maintained by Brant Keener
 
 ## Attributions
 Music: Outrun with the Dead Artist: Vincenzo Salvia
-Cheering sounds, Sad trombone, and whine are all provided by [Sound Bible](http://http://soundbible.com/)
+Cheering sounds, Sad trombone, and whine are all provided by [Sound Bible](http://soundbible.com/)
