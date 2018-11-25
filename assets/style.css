@@ -229,3 +229,105 @@ table, th, td {
 #high_score_area{
     padding: 10%;
 }
+
+@media screen and (max-width: 1150px) {
+    #RPS_title, #RPS_title::before, #RPS_title::after {
+        font-size: 3rem;
+    } 
+}
+
+@media screen and (max-width: 1000px) {
+    #main_container {
+        padding: 2%;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    #main_container {
+        padding: 5%;
+        height: 100%;
+        width: 100%;
+        background-size: cover;
+    }
+
+    #chat_area {
+        width: 50%;
+        height: 90%;
+    }
+
+    #RPS_title, #RPS_title::before, #RPS_title::after {
+        font-size: 2rem;
+    }
+}
+
+@media screen and (max-width: 850px) {
+    #choice_row {
+        grid-template-columns: 3fr 1fr 3fr;
+    }
+
+    #main_container {
+        padding: 10%;
+        height: 100%;
+        width: 100%;
+        background-size: cover;
+    }
+
+    #chat_log {
+        height: 60%;
+    }
+
+    #score_chat_row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 5fr;
+        justify-items: center;
+        grid-gap: 60px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    body {
+        overflow: scroll;
+    }
+    #score_chat_row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-items: center;
+    }
+    #gamer_area {
+        display: flex;
+        flex-wrap: wrap;
+        justify-items: center;
+    }
+    #score_chat_row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-items: center;
+    }
+    #choice_row {
+        display: block;
+    }
+    #current_score_area {
+        height: 25%;
+    }
+    #main_container {
+        padding: 5%;
+    }
+    #chat_area {
+        width: 90%;
+        height: 25%;
+        padding: 5%;
+    }
+}
+
+@media screen and (max-width: 525px) {
+    body {
+        font-size: 10px;
+    }
+    #username {
+        width: 90%;
+        left: 5%;
+    }
+    #win_loss_tie {
+        width: 75%;
+    }
+}
