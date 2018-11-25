@@ -141,6 +141,8 @@ $(document).click(function(e) {
       break;
     case 'user_button':
       loginFormValidation()
+      let audio = new Audio('assets/sounds/04 - Outrun with the dead.mp3');
+      audio.play();
       break;
     case 'rock':
       $('#player_choice_area').css('overflow', 'hidden');
@@ -456,6 +458,10 @@ function winDisplay() {
   $('#round_picture').css('visibility', 'visible');
   $('#username').css('visibility', 'hidden');
   };
+  if(userName !== "") {
+    let audio = new Audio('assets/sounds/Small_crowd_applause.wav');
+    audio.play();
+  };
   setTimeout(wtlDisplayClose, 2000);
   howManyRounds();
 };
@@ -473,6 +479,10 @@ function lossDisplay() {
   $('#round_picture').css('visibility', 'visible');
   $('#username').css('visibility', 'hidden');
   };
+  if(userName !== "") {
+    let audio = new Audio('assets/sounds/Sad_Trombone.wav');
+    audio.play();
+  };
   setTimeout(wtlDisplayClose, 2000);
   howManyRounds();
 };
@@ -489,6 +499,10 @@ function tieDisplay() {
   $('#win_loss_tie').attr('src', tiePic)
   $('#round_picture').css('visibility', 'visible');
   $('#username').css('visibility', 'hidden');
+  };
+  if(userName !== '') {
+    let audio = new Audio('assets/sounds/Whine.wav');
+    audio.play();
   };
   setTimeout(wtlDisplayClose, 2000);
   howManyRounds();
