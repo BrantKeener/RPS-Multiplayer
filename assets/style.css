@@ -46,13 +46,13 @@ body {
 
 #RPS_title::before {
     left: 5px;
-    text-shadow: -1px 0 red;
+    text-shadow: -1px 0 rgba(204, 102, 188, 1);;
     animation: glitch-anim-1 2s infinite linear alternate-reverse;
 }
 
 #RPS_title::after {
     left: -5px;
-    text-shadow: -1px 0 blue;
+    text-shadow: -1px 0 rgba(149, 32, 208, 1);
     animation: glitch-anim-2 2s infinite linear alternate-reverse;
 }
 
@@ -224,4 +224,8 @@ table, th, td {
 
 #chat_box {
     text-align: center;
+}
+
+#high_score_area{
+    padding: 10%;
 }

@@ -81,7 +81,7 @@ connectionsRef.on('value', function(snapshot) {
 
 // Newgame Reset
 function newGameReset() {
-  database.ref().update({
+  database.ref('RPSMP').update({
     choicemade: false,
   });
   database.ref('RPSMP').child('chosen/').remove();
@@ -102,7 +102,7 @@ function newGameReset() {
 
 // Midgame Reset
 function midGameReset() {
-  database.ref().update({
+  database.ref('RPSMP/').update({
     choicemade: false,
   });
   database.ref('RPSMP').child('chosen/').remove();
@@ -196,7 +196,6 @@ function userNamePost() {
 // Posts opponents name within opponent area
 database.ref('RPSMP/player/').on('child_added', function(snapshot) {
   database.ref('RPSMP/player/').once('value', function(snapshot) {
-    console.log(snapshot.val().playernumber1);
     if(snapshot.val().playernumber1 !== userName) {
       $('#opponent_username_chosen_status').text(snapshot.val().playernumber1);
       opponentName = snapshot.val().playernumber1;
@@ -291,7 +290,7 @@ database.ref('RPSMP/player/').on('child_added', function(snapshot) {
 
 // Send a signal to the DB that a player has chosen
 function choiceMadeChecker() {
-  database.ref().once('value').then(function(snapshot) {
+  database.ref('RPSMP').once('value').then(function(snapshot) {
     if(snapshot.val().choicemade == false) {
       choiceMadeTrueifier();
       database.ref('RPSMP/chosen/').update({
@@ -307,7 +306,7 @@ function choiceMadeChecker() {
 
 // Makes the choicemade key in the database true
 function choiceMadeTrueifier() {
-  database.ref().update({
+  database.ref('RPSMP').update({
     choicemade: true,
   });
 };
@@ -442,7 +441,6 @@ function opponentChoiceDisplay(opponentchoice) {
 // Update the win/loss/tie displays
 function winDisplay() {
   let winPic = $('#win_loss_tie').data('win');
-  console.log(winPic);
   $('#wins').text(`Wins: ${winCount}`);
   $('#round').text(`Round: ${roundCount}`);
   if(roundCount < roundsPerGame) {
@@ -460,7 +458,6 @@ function winDisplay() {
 
 function lossDisplay() {
   let lossPic = $('#win_loss_tie').data('loss');
-  console.log(lossPic);
   $('#losses').text(`Losses: ${lossCount}`);
   $('#round').text(`Round: ${roundCount}`);
   if(roundCount < roundsPerGame) {
@@ -520,22 +517,88 @@ function winnerDeclared() {
     $('#username').css('visibility', 'visible');
     $('#login_modal').css('visibility', 'visible');
     $('#online_counterhead').text(`You have won!`);
+    $('#post_win_reset').remove();
     $('#username').append('<button id="post_win_reset">Play Again</button>');
   };
   if(lossCount > winCount && tieCount !== roundCount) {
     $('#username').css('visibility', 'visible');
     $('#login_modal').css('visibility', 'visible');
     $('#online_counterhead').text(`${opponentName} has won!`);
+    $('#post_win_reset').remove();
     $('#username').append('<button id="post_win_reset">Play Again</button>');
   };
   if(winCount === lossCount || tieCount === roundCount) {
     $('#username').css('visibility', 'visible');
     $('#login_modal').css('visibility', 'visible');
-    $('#online_counterhead').text('It is a tie. You two are evenly matched.')
+    $('#online_counterhead').text('It is a tie. You two are evenly matched.');
+    $('#post_win_reset').remove();
     $('#username').append('<button id="post_win_reset">Play Again</button>');
   };
+  highScoreCheck();
 };
 
+// Check new scores against high score
+function highScoreCheck() {
+  database.ref('RPSMP/highScores/').once('value', function(snapshot) {
+    let topScore = snapshot.val().hscore1.score1;
+    let secondScore = snapshot.val().hscore2.score2;
+    let thirdScore = snapshot.val().hscore3.score3;
+    console.log(topScore);
+    if(winCount > topScore) {
+      database.ref('RPSMP/highScores/').update({
+        hscore1: {userid1: userName, score1: winCount},
+      });
+    };
+    if(winCount > secondScore && winCount < topScore) {
+      database.ref('RPSMP/highScores/').update({
+        hscore2: {userid2: userName, score2: winCount},
+      });
+    };
+    if(winCount > thirdScore && winCount < topscore && winCount < secondScore) {
+      database.ref('RPSMP/highScores/').update({
+        hscore3: {userid3: userName, score3: winCount},
+      });
+    };
+    highScoreDisplay();
+  });
+  
+
+  // database.ref('RPSMP/highScores/').update({
+  //   hscore1: {userid1: 'default1', score1: 5},
+  //   hscore2: {userid2: 'default2', score2: 4},
+  //   hscore3: {userid3: 'default3', score3: 3}, 
+  // });
+};
+
+// Display high scores
+function highScoreDisplay() {
+  database.ref('RPSMP/highScores/').once('value', function(snapshot) {
+    let hiscore1 = snapshot.val().hscore1
+    let hiscore2 = snapshot.val().hscore2
+    let hiscore3 = snapshot.val().hscore3
+    for(let i = 1; i < 4; i++) {
+      let hs_uid_row = $(`#hscore${i}_uid`);
+      let hs_score_row = $(`#hscore${i}_win`);
+      switch(i) {
+        case 1:
+        hs_uid_row.text(hiscore1.userid1);
+        hs_score_row.text(hiscore1.score1);
+        break;
+        case 2:
+        hs_uid_row.text(hiscore2.userid2);
+        hs_score_row.text(hiscore2.score2);
+        break;
+        case 3:
+        hs_uid_row.text(hiscore3.userid3);
+        hs_score_row.text(hiscore3.score3);
+        break;
+      }
+    };
+  });
+};
+
+highScoreDisplay();
+newGameReset();
 winDisplay();
 tieDisplay();
 lossDisplay();
