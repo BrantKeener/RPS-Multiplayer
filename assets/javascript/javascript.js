@@ -229,8 +229,9 @@ database.ref('RPSMP/chat/').on('child_added', function(snapshot) {
   let lastAdded = snapshot.val();
   let chatPara = $('<p>').text(`${lastAdded.username} : ${lastAdded.chat}`);
   $('#chat_log').append(chatPara);
-  if(chatNumber > 5) {
-    chatLogClear();
+  $('#chat_log').scrollTop(300);
+  if($('#chat_log').children().length === 7) {
+    $('#chat_log').find(':first-child').remove();
   };
 });
 
